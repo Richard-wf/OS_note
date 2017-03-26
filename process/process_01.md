@@ -41,7 +41,7 @@ struct task_struct {
 每个进程都有一个唯一的数字标示符，称为进程ID，它总是非负整数。为了与老版本的unix和linux兼容，pid的最大值默认设置为32768。
 用ps，top，htop等命令可以看到操作系统当前的进程列表。
 ### 进程状态
-`volatile long state;`
+`volatile long state;`<br/>
 进程描述符中的state字段描述了进程当前所处的状态。
 1. **可运行状态（TASK_RUNNING）**<br/>
  &emsp;进程要么在CPU上执行，要么准备执行。
@@ -97,13 +97,13 @@ int main(int argc, char* argv[])
 ```
 ## 进程的终止
 8种方式终止进程
-**5种正常的**
+### 5种正常的
 1. 从main返回
 2. 调用exit
 3. 调用_exit或_exit
 4. 最后一个线程从其启动例程返回
 5. 从最后一个线程调用pthread_exit
-**3种异常终止**
+### 3种异常终止
 1. 调用abort
 2. 接到一个信号
 3. 最后一个线程对取消请求做出响应
