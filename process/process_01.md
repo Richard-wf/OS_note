@@ -43,15 +43,15 @@ struct task_struct {
 ### 进程状态
 `volatile long state;`
 进程描述符中的state字段描述了进程当前所处的状态。
-1. **可运行状态（TASK_RUNNING）**
+1. **可运行状态（TASK_RUNNING）**<br/>
  &emsp;进程要么在CPU上执行，要么准备执行。
-2. **可中断的等待状态（TASK_INTERRUPTIBLE）**
+2. **可中断的等待状态（TASK_INTERRUPTIBLE）**<br/>
      &emsp;进程被挂起（睡眠），直到某个条件变为真。产生一个硬件中断，释放进程正等待的系统资源，或传递一个信号都是可以唤醒进程的条件（把进程的状态放回到TASK_RUNNING）
-3. **不可中断的等待状态（TASK_UNINTERRUPTIBLE）**
+3. **不可中断的等待状态（TASK_UNINTERRUPTIBLE）**<br/>
       &emsp;与可中断的等待状态类似，但有一个例外，把信号传递到睡眠进程不能改变它的状态。这种状态很少用到，但在一些特定的情况下（进程必须等待，直到一个不能被中断的事件发生），这种状态是很有用的。例如，当进程打开一个设备文件，其相应的设备驱动程序开始探测相应的硬件设备时会用到这种状态。探测完成以前，设备驱动程序不能被中断，否则，硬件设备会处于不可预知的状态。
-4. **暂停状态（TASK_STOPPED）**
+4. **暂停状态（TASK_STOPPED）**<br/>
      &emsp; 进程的执行被暂停。当进程收到SIGSTOP、SIGTOP、SIGTIN、SIGTTOU信号后，进入暂停状态。
-5. **跟踪状态（TASK_TRACED）**
+5. **跟踪状态（TASK_TRACED）**<br/>
      &emsp; 进程的执行已由debugger程序暂停。当一个进程被另一个进程监控时（strace命令，例如debugger执行ptrace()系统调用监控一个测试程序），任何信号都可以把这个进程置于TASK_TRACED状态。
 ## 创建一个进程
 ```
@@ -68,7 +68,7 @@ fork()函数为创建一个子进程的系统调用，底层调用clone()系统�
 5. copy_process()调用copy_flags()以更新task_struct的flags成员。表明进程是否拥有超级用户权限的PF_SUPERPRIV标志被清0。表明进程还没有调用exec()函数的PF_FORKNOEXEC标志被设置。
 6. 调用alloc_pid()为新进程分配一个有效的PID。
 7. 根据传递给clone()的参数标志，copy_process()拷贝或共享打开的文件、文件系统信息、信号处理函数、进程地址空间等。在一般情况下，这些资源会被给定进程的所有线程共享；否则，这些资源对每个进程是不同的，因此被拷贝到这里。
-+ 8.copy_process()做扫尾工作并返回一个指向子进程的指针。
+8. copy_process()做扫尾工作并返回一个指向子进程的指针。
 
 ### 写时拷贝
 fork()使用写时拷贝（copy-on-write）页实现。写时拷贝是一种可以推迟甚至免除拷贝数据的技术。内核此时并不复制整个进程地址空间，而是让父进程和子进程共享同一个拷贝。<br/>
